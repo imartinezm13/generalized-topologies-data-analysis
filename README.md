@@ -248,3 +248,16 @@ This repository supports the article:
 
 If you use this code or data, please cite accordingly.
 
+### Global sensitivity tables — `runners/global_sensitivity_tables.py`
+
+To obtain a single, concise view of quality and stability across all datasets, you can run:
+
+```bash
+python runners/global_sensitivity_tables.py > results/global_sensitivity_tables.tex
+```
+
+This prints LaTeX tables that aggregate, for PISA, Gapminder, Synthetic, and UCI-Iris:
+
+- median expansion and retention ratios per base and dataset,  
+- median closure purity (where labels/regimes are available),  
+- and median Jaccard and ARI stability measures across seeds and perturbations.
