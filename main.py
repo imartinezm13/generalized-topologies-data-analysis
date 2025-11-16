@@ -1,6 +1,7 @@
 import pandas as pd
 from utils.data_utils import stand, positions_less_or_equal, avg_data
-from utils.regression import multi_regression, evaluate_polynomial, optimal_point
+from utils.regression import multi_regression, evaluate_polynomial
+from utils.regression_robust import optimal_point_robust as optimal_point
 from utils.analysis import process_batch
 
 from scipy.spatial.distance import pdist, squareform
@@ -29,10 +30,21 @@ def preprocess_data(df):
     df_scaled = stand(df)
     return df_scaled
 
-def build_base(df_scaled):
-    """Build the base topological structure from scaled data."""
+def build_base(df_scaled, linkage_method: str = 'single', distance_metric: str = 'euclidean'):
+    """Build the base topological structure from scaled data.
 
-    dendrogram = linkage(df_scaled, method='single')  # Hierarchical clustering
+    Parameters:
+    - df_scaled: array-like, scaled numeric data
+    - linkage_method: str, hierarchical linkage criterion (e.g., 'single', 'complete', 'average', 'ward')
+    - distance_metric: str, distance metric for pdist (e.g., 'euclidean', 'cityblock', 'cosine', 'correlation')
+    """
+
+    # Compute linkage; ward requires observation vectors (not a distance matrix)
+    if linkage_method == 'ward':
+        dendrogram = linkage(df_scaled, method='ward')
+    else:
+        condensed = pdist(df_scaled, metric=distance_metric)
+        dendrogram = linkage(condensed, method=linkage_method)
     result_tree = convertir_a_Tree(dendrogram, leaf_names=range(len(df_scaled)))  # Dendrogram to tree
     asignar_nombres(result_tree)  # Assign names to nodes
     all_subtrees = obtener_subarboles(result_tree)  # Get all subtrees
@@ -43,8 +55,15 @@ def build_base(df_scaled):
 
     return base
 
-def build_gen_base_1(Base, df):
-    """Build the gen_base_1 from the base structure."""
+def build_gen_base_1(Base, df, distance_metric: str = 'euclidean', target_r2: float = 0.99):
+    """Build the gen_base_1 from the base structure.
+
+    Parameters:
+    - Base: list of lists, base structure indices
+    - df: pandas DataFrame, unscaled numeric data
+    - distance_metric: str, metric for pdist when comparing representative minima
+    - target_r2: float, target R^2 for regression thresholding
+    """
 
     # Convert all elements in Base to integers for indexing
     Base_int = [[int(item) for item in subset] for subset in Base]
@@ -61,7 +80,7 @@ def build_gen_base_1(Base, df):
     # Standardize the minimum values DataFrame
     df_min = stand(min_values).astype(float)
     # Compute pairwise Euclidean distances between the standardized minimum rows
-    distances = pdist(df_min, metric='euclidean')
+    distances = pdist(df_min, metric=distance_metric)
     # Convert the condensed distance matrix to a square form
     distance_matrix = squareform(distances)
     # Create a DataFrame for the distance matrix for easier indexing
@@ -77,15 +96,20 @@ def build_gen_base_1(Base, df):
     vec = np.sort(vector[vector > 0])
 
     # Create a sequence for regression (1, 2, ..., len(vec))
+    if len(vec) == 0:
+        return Base
     y = np.array([i for i in range(1, len(vec)+1)])
-    r = 0.99  # Regularization parameter for regression
+    r = target_r2  # Target R^2 for regression-based threshold
     # Fit a polynomial regression to the sorted distances
     poly, _ = multi_regression(vec, y, r)
     # Compute squared differences between actual and predicted y values
     squared_differences = (y - [evaluate_polynomial(vec[i], poly)[0] for i in range(len(vec))])**2
 
     # Find the optimal threshold (x_min) that minimizes the squared differences
-    x_min = optimal_point(vec, squared_differences)
+    try:
+        x_min = optimal_point(vec, squared_differences)
+    except Exception:
+        x_min = float(vec[np.argmin(squared_differences)])
 
     # Find positions in the distance matrix where the value is less than or equal to x_min
     positions = positions_less_or_equal(dist_values, x_min)
@@ -99,7 +123,7 @@ def build_gen_base_1(Base, df):
 
     return build_generalized_base_1
 
-def build_gen_base_2(Base, df_scaled, df):
+def build_gen_base_2(Base, df_scaled, df, distance_metric: str = 'euclidean', target_r2: float = 0.99):
     """
     Constructs the gen_base_2 set by merging base elements based on distance and regression analysis.
     """
@@ -108,7 +132,7 @@ def build_gen_base_2(Base, df_scaled, df):
     # Compute the representative matrix for the base using the scaled dataframe
     A = avg_data(index_base, df_scaled).astype(float)
     # Calculate pairwise Euclidean distances between base representatives
-    distances = pdist(A, metric='euclidean')
+    distances = pdist(A, metric=distance_metric)
     # Convert the condensed distance matrix to a square form
     distance_matrix = squareform(distances)
     # Extract the upper triangular part of the distance matrix (to avoid duplicate pairs)
@@ -157,13 +181,18 @@ def build_gen_base_2(Base, df_scaled, df):
 
         W_i.append(w)  # Store the computed value
 
-    r = 0.99  # Regularization parameter for regression
+    if len(Vec) == 0:
+        return Base
+    r = target_r2  # Target R^2 for regression-based threshold
     # Fit a polynomial regression to the W_i values
     poly1, _ = multi_regression(Vec, W_i, r)
     # Compute squared differences between actual and predicted W_i values
     squared_differences = (np.array(W_i) - np.array([evaluate_polynomial(v, poly1)[0] for v in Vec])) ** 2
     # Find the optimal threshold (x_min) that minimizes the squared differences
-    x_min = optimal_point(Vec, squared_differences)
+    try:
+        x_min = optimal_point(Vec, squared_differences)
+    except Exception:
+        x_min = float(Vec[np.argmin(squared_differences)])
 
     # Find positions in the triangular matrix where the value is less than or equal to x_min
     positions = positions_less_or_equal(triangular, x_min)
@@ -188,8 +217,14 @@ def build_gen_base_2(Base, df_scaled, df):
 
     return gen_base_2
 
-def build_clusters(df):
-    """Cluster countries based on their math, reading, and science scores."""
+def build_clusters(df, n_clusters: int = 4, random_state: int | None = 42):
+    """Cluster countries based on their math, reading, and science scores.
+
+    Parameters:
+    - df: pandas DataFrame
+    - n_clusters: int, number of clusters for k-means
+    - random_state: optional seed for reproducibility
+    """
     # Select the columns to use for clustering
     score_columns = ["Mathematics Score", "Reading Score", "Science Score"]
     # Standardize the selected score columns
@@ -197,38 +232,13 @@ def build_clusters(df):
     X = df[score_columns]
     X = scaler.fit_transform(X)
     # Set the number of clusters
-    N_CLUSTERS = 4
+    N_CLUSTERS = n_clusters
     # Initialize and fit KMeans clustering
-    kmeans = KMeans(n_clusters=N_CLUSTERS, random_state=42)
+    kmeans = KMeans(n_clusters=N_CLUSTERS, random_state=random_state)
     labels = kmeans.fit_predict(X)
     # Group indices of countries by their assigned cluster
     clusters = [[str(i) for i in np.where(labels == cluster_id)[0]] for cluster_id in range(N_CLUSTERS)]
     return clusters
-
-# Load the original dataset
-df_original = load_data()
-
-# List of qualitative columns to exclude from numerical analysis
-Cualitativo = ['Country', 'Type of Economy', 'Population Density', 'Type of Government', 'Continent']
-
-# Remove qualitative columns to retain only quantitative data for analysis
-df = df_original.drop(Cualitativo, axis=1)
-
-# Preprocess the quantitative data (e.g., scaling/normalization)
-df_scaled = preprocess_data(df)
-
-# Build the initial base (collection of subsets) from the scaled data
-Base = build_base(df_scaled)
-
-# Build build_generalized_base_1 using the initial base and the unscaled quantitative data
-gen_base_1 = build_gen_base_1(Base, df)
-
-# Build gen_base_2 using the initial base, scaled data, and unscaled data
-gen_base_2 = build_gen_base_2(Base, df_scaled, df)
-
-# Cluster the countries based on their scores and obtain cluster groupings
-clusters = build_clusters(df)
-
 
 def define_groups_and_targets(df, gen_base_1, gen_base_2, Base, clusters):
     """Define groupings and target sets for analysis based on qualitative columns (translated to English)."""
@@ -312,24 +322,79 @@ def define_groups_and_targets(df, gen_base_1, gen_base_2, Base, clusters):
         group_definitions_continent
     )
 
-# Define all groupings and targets for analysis
-(
-    A,
-    target_groups,
-    group_definitions_economy,
-    group_definitions_density,
-    group_definitions_government,
-    group_definitions_continent
-) = define_groups_and_targets(
-    df_original,
-    gen_base_1,
-    gen_base_2,
-    Base,
-    clusters
-)
+def run_pisa(linkage_method: str = 'single',
+             distance_metric: str = 'euclidean',
+             target_r2: float = 0.99,
+             n_clusters: int = 4,
+             random_state: int | None = 42,
+             results_root: str = "results/PISA") -> None:
+    """Run the PISA pipeline with configurable parameters and output root.
 
-# Process and output results for each group type
-process_batch(group_definitions_economy, df_original, target_groups, A, output_folder="results/economy")      # Economy-based groups
-process_batch(group_definitions_density, df_original, target_groups, A, output_folder="results/density")      # Population density-based groups
-process_batch(group_definitions_government, df_original, target_groups, A, output_folder="results/government")# Government type-based groups
-process_batch(group_definitions_continent, df_original, target_groups, A, output_folder="results/continent")  # Continent-based groups
+    Defaults reproduce the current paper setup and file layout.
+    """
+    # Load the original dataset
+    df_original = load_data()
+
+    # List of qualitative columns to exclude from numerical analysis
+    Cualitativo = ['Country', 'Type of Economy', 'Population Density', 'Type of Government', 'Continent']
+
+    # Remove qualitative columns to retain only quantitative data for analysis
+    df = df_original.drop(Cualitativo, axis=1)
+
+    # Preprocess the quantitative data (e.g., scaling/normalization)
+    df_scaled = preprocess_data(df)
+
+    # Build the initial base (collection of subsets) from the scaled data
+    Base = build_base(df_scaled, linkage_method=linkage_method, distance_metric=distance_metric)
+
+    # Build generalized bases
+    gen_base_1 = build_gen_base_1(Base, df, distance_metric=distance_metric, target_r2=target_r2)
+    gen_base_2 = build_gen_base_2(Base, df_scaled, df, distance_metric=distance_metric, target_r2=target_r2)
+
+    # Cluster the countries based on their scores and obtain cluster groupings
+    clusters = build_clusters(df, n_clusters=n_clusters, random_state=random_state)
+
+    # Define all groupings and targets for analysis
+    (
+        A,
+        target_groups,
+        group_definitions_economy,
+        group_definitions_density,
+        group_definitions_government,
+        group_definitions_continent
+    ) = define_groups_and_targets(
+        df_original,
+        gen_base_1,
+        gen_base_2,
+        Base,
+        clusters
+    )
+
+    # Process and output results for each group type under results_root
+    process_batch(group_definitions_economy, df_original, target_groups, A, output_folder=f"{results_root}/economy")
+    process_batch(group_definitions_density, df_original, target_groups, A, output_folder=f"{results_root}/density")
+    process_batch(group_definitions_government, df_original, target_groups, A, output_folder=f"{results_root}/government")
+    process_batch(group_definitions_continent, df_original, target_groups, A, output_folder=f"{results_root}/continent")
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Run PISA generalized topology analysis.")
+    parser.add_argument("--linkage", default="single", choices=["single", "complete", "average", "ward"], help="Hierarchical linkage method")
+    parser.add_argument("--metric", default="euclidean", choices=["euclidean", "cityblock", "cosine", "correlation"], help="Distance metric (ignored for ward)")
+    parser.add_argument("--target-r2", type=float, default=0.99, help="Target R^2 for regression thresholding")
+    parser.add_argument("--n-clusters", type=int, default=4, help="Number of clusters for k-means base")
+    parser.add_argument("--random-state", type=int, default=42, help="Random seed for k-means")
+    parser.add_argument("--out", default="results/PISA", help="Output root directory")
+
+    args = parser.parse_args()
+
+    run_pisa(
+        linkage_method=args.linkage,
+        distance_metric=args.metric,
+        target_r2=args.target_r2,
+        n_clusters=args.n_clusters,
+        random_state=args.random_state,
+        results_root=args.out,
+    )

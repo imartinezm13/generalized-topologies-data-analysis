@@ -31,21 +31,21 @@ def polynomial_regression(x, y, degree, display=False):
     for i in range(1, degree + 1):
         polynom += model.coef_[i] * (x_symbol ** i)
 
-    if display:
+    if False and display:
         print(f"Polynomial Equation: {polynom}")
         print(f"R^2: {r2:.4f}")
 
-        # Plot the data and the polynomial fit
-        plt.scatter(x, y, color='red', label='Data')
-        x_range = np.linspace(np.min(x), np.max(x), 100).reshape(-1, 1)
-        x_range_poly = poly.transform(x_range)
-        y_range_pred = model.predict(x_range_poly)
-        plt.plot(x_range, y_range_pred, color='blue', label=f'Polynomial Fit (Degree {degree})')
-        plt.xlabel('x')
-        plt.ylabel('y')
-        plt.title(f'Polynomial Regression (Degree {degree})')
-        plt.legend()
-        plt.show()
+        # Plot disabled for headless runs
+        # plt.scatter(x, y, color='red', label='Data')
+        # x_range = np.linspace(np.min(x), np.max(x), 100).reshape(-1, 1)
+        # x_range_poly = poly.transform(x_range)
+        # y_range_pred = model.predict(x_range_poly)
+        # plt.plot(x_range, y_range_pred, color='blue', label=f'Polynomial Fit (Degree {degree})')
+        # plt.xlabel('x')
+        # plt.ylabel('y')
+        # plt.title(f'Polynomial Regression (Degree {degree})')
+        # plt.legend()
+        # plt.show()
 
     return polynom, r2
 
@@ -89,23 +89,23 @@ def multi_regression(x, y, target_r2, display=False):
     print(f"Final Polynomial Equation: {polynom}")
     print(f"Final R^2: {r2:.4f}")
 
-    if display:
-        # Plot final result
+    if False and display:
+        # Plot final result disabled for headless runs
         poly = PolynomialFeatures(degree=degree)
         x_poly = poly.fit_transform(x.reshape(-1, 1))
         model = LinearRegression()
         model.fit(x_poly, y)
 
-        plt.scatter(x, y, color='red', label='Data')
-        x_range = np.linspace(np.min(x), np.max(x), 100).reshape(-1, 1)
-        x_range_poly = poly.transform(x_range)
-        y_range_pred = model.predict(x_range_poly)
-        plt.plot(x_range, y_range_pred, color='blue', label=f'Polynomial Fit (Degree {degree})')
-        plt.xlabel('x')
-        plt.ylabel('y')
-        plt.title(f'Polynomial Regression (Degree {degree})')
-        plt.legend()
-        plt.show()
+        # plt.scatter(x, y, color='red', label='Data')
+        # x_range = np.linspace(np.min(x), np.max(x), 100).reshape(-1, 1)
+        # x_range_poly = poly.transform(x_range)
+        # y_range_pred = model.predict(x_range_poly)
+        # plt.plot(x_range, y_range_pred, color='blue', label=f'Polynomial Fit (Degree {degree})')
+        # plt.xlabel('x')
+        # plt.ylabel('y')
+        # plt.title(f'Polynomial Regression (Degree {degree})')
+        # plt.legend()
+        # plt.show()
 
     return polynom, r2
 

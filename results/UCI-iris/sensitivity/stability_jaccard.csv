@@ -1,0 +1,281 @@
+dataset,linkage,metric,noise,family,seed,base,jaccard_median,runs
+UCI-iris,complete,cityblock,0.0,label,class_0,base,1.0,5
+UCI-iris,complete,cityblock,0.0,label,class_0,clusters,0.9705882352941176,5
+UCI-iris,complete,cityblock,0.0,label,class_0,gen_base_1,1.0,5
+UCI-iris,complete,cityblock,0.0,label,class_0,gen_base_2,1.0,5
+UCI-iris,complete,cityblock,0.0,label,class_1,base,1.0,5
+UCI-iris,complete,cityblock,0.0,label,class_1,clusters,0.9323835368611488,5
+UCI-iris,complete,cityblock,0.0,label,class_1,gen_base_1,1.0,5
+UCI-iris,complete,cityblock,0.0,label,class_1,gen_base_2,1.0,5
+UCI-iris,complete,cityblock,0.0,label,class_2,base,1.0,5
+UCI-iris,complete,cityblock,0.0,label,class_2,clusters,0.9850746268656716,5
+UCI-iris,complete,cityblock,0.0,label,class_2,gen_base_1,1.0,5
+UCI-iris,complete,cityblock,0.0,label,class_2,gen_base_2,1.0,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,High,base,1.0,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,High,clusters,0.9696969696969697,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,High,gen_base_1,1.0,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,High,gen_base_2,1.0,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,Low,base,1.0,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,Low,clusters,0.7164179104477612,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,Low,gen_base_1,1.0,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,Low,gen_base_2,1.0,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,MedHigh,base,1.0,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,MedHigh,clusters,0.9850746268656716,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,MedHigh,gen_base_1,1.0,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,MedHigh,gen_base_2,1.0,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,MedLow,base,1.0,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,MedLow,clusters,0.8173572459286745,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,MedLow,gen_base_1,1.0,5
+UCI-iris,complete,cityblock,0.0,sepal length (cm)_quantiles,MedLow,gen_base_2,1.0,5
+UCI-iris,complete,cityblock,0.02,label,class_0,base,1.0,5
+UCI-iris,complete,cityblock,0.02,label,class_0,clusters,0.9705882352941176,5
+UCI-iris,complete,cityblock,0.02,label,class_0,gen_base_1,0.5789473684210527,5
+UCI-iris,complete,cityblock,0.02,label,class_0,gen_base_2,0.559322033898305,5
+UCI-iris,complete,cityblock,0.02,label,class_1,base,0.9047619047619048,5
+UCI-iris,complete,cityblock,0.02,label,class_1,clusters,0.9850746268656716,5
+UCI-iris,complete,cityblock,0.02,label,class_1,gen_base_1,0.5285115979381443,5
+UCI-iris,complete,cityblock,0.02,label,class_1,gen_base_2,0.48705970790378006,5
+UCI-iris,complete,cityblock,0.02,label,class_2,base,0.9480431848852902,5
+UCI-iris,complete,cityblock,0.02,label,class_2,clusters,0.9850746268656716,5
+UCI-iris,complete,cityblock,0.02,label,class_2,gen_base_1,0.7045454545454546,5
+UCI-iris,complete,cityblock,0.02,label,class_2,gen_base_2,0.6861535448491971,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,High,base,0.8575050709939147,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,High,clusters,0.803030303030303,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,High,gen_base_1,0.6388888888888888,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,High,gen_base_2,0.7125191228964813,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,Low,base,0.8910068426197458,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,Low,clusters,0.6917684305744007,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,Low,gen_base_1,0.44871794871794873,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,Low,gen_base_2,0.4691358024691358,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,MedHigh,base,0.7772727272727273,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,MedHigh,clusters,0.9850746268656716,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,MedHigh,gen_base_1,0.6933333333333334,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,MedHigh,gen_base_2,0.6428571428571428,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,MedLow,base,0.7777777777777778,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,MedLow,clusters,0.8972602739726028,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,MedLow,gen_base_1,0.7070707070707071,5
+UCI-iris,complete,cityblock,0.02,sepal length (cm)_quantiles,MedLow,gen_base_2,0.6262626262626263,5
+UCI-iris,complete,euclidean,0.0,label,class_0,base,1.0,5
+UCI-iris,complete,euclidean,0.0,label,class_0,clusters,0.9705882352941176,5
+UCI-iris,complete,euclidean,0.0,label,class_0,gen_base_1,1.0,5
+UCI-iris,complete,euclidean,0.0,label,class_0,gen_base_2,1.0,5
+UCI-iris,complete,euclidean,0.0,label,class_1,base,1.0,5
+UCI-iris,complete,euclidean,0.0,label,class_1,clusters,0.9323835368611488,5
+UCI-iris,complete,euclidean,0.0,label,class_1,gen_base_1,1.0,5
+UCI-iris,complete,euclidean,0.0,label,class_1,gen_base_2,1.0,5
+UCI-iris,complete,euclidean,0.0,label,class_2,base,1.0,5
+UCI-iris,complete,euclidean,0.0,label,class_2,clusters,0.9850746268656716,5
+UCI-iris,complete,euclidean,0.0,label,class_2,gen_base_1,1.0,5
+UCI-iris,complete,euclidean,0.0,label,class_2,gen_base_2,1.0,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,High,base,1.0,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,High,clusters,0.9696969696969697,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,High,gen_base_1,1.0,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,High,gen_base_2,1.0,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,Low,base,1.0,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,Low,clusters,0.7164179104477612,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,Low,gen_base_1,1.0,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,Low,gen_base_2,1.0,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,MedHigh,base,1.0,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,MedHigh,clusters,0.9850746268656716,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,MedHigh,gen_base_1,1.0,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,MedHigh,gen_base_2,1.0,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,MedLow,base,1.0,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,MedLow,clusters,0.8173572459286745,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,MedLow,gen_base_1,1.0,5
+UCI-iris,complete,euclidean,0.0,sepal length (cm)_quantiles,MedLow,gen_base_2,1.0,5
+UCI-iris,complete,euclidean,0.02,label,class_0,base,1.0,5
+UCI-iris,complete,euclidean,0.02,label,class_0,clusters,0.9705882352941176,5
+UCI-iris,complete,euclidean,0.02,label,class_0,gen_base_1,1.0,5
+UCI-iris,complete,euclidean,0.02,label,class_0,gen_base_2,1.0,5
+UCI-iris,complete,euclidean,0.02,label,class_1,base,0.975,5
+UCI-iris,complete,euclidean,0.02,label,class_1,clusters,0.9850746268656716,5
+UCI-iris,complete,euclidean,0.02,label,class_1,gen_base_1,0.9347826086956522,5
+UCI-iris,complete,euclidean,0.02,label,class_1,gen_base_2,0.8879166666666667,5
+UCI-iris,complete,euclidean,0.02,label,class_2,base,0.9743589743589743,5
+UCI-iris,complete,euclidean,0.02,label,class_2,clusters,0.9850746268656716,5
+UCI-iris,complete,euclidean,0.02,label,class_2,gen_base_1,0.8946317657497782,5
+UCI-iris,complete,euclidean,0.02,label,class_2,gen_base_2,0.9181818181818182,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,High,base,0.8235294117647058,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,High,clusters,0.803030303030303,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,High,gen_base_1,0.8334982681840672,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,High,gen_base_2,0.8018867924528302,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,Low,base,1.0,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,Low,clusters,0.6917684305744007,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,Low,gen_base_1,1.0,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,Low,gen_base_2,0.9142857142857143,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,MedHigh,base,0.7938508064516129,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,MedHigh,clusters,0.9850746268656716,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,MedHigh,gen_base_1,0.891287284144427,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,MedHigh,gen_base_2,0.8348457350272231,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,MedLow,base,0.8142857142857143,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,MedLow,clusters,0.8972602739726028,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,MedLow,gen_base_1,0.8547108208955223,5
+UCI-iris,complete,euclidean,0.02,sepal length (cm)_quantiles,MedLow,gen_base_2,0.8552521008403362,5
+UCI-iris,single,cityblock,0.0,label,class_0,base,1.0,5
+UCI-iris,single,cityblock,0.0,label,class_0,clusters,0.9705882352941176,5
+UCI-iris,single,cityblock,0.0,label,class_0,gen_base_1,1.0,5
+UCI-iris,single,cityblock,0.0,label,class_0,gen_base_2,1.0,5
+UCI-iris,single,cityblock,0.0,label,class_1,base,1.0,5
+UCI-iris,single,cityblock,0.0,label,class_1,clusters,0.9323835368611488,5
+UCI-iris,single,cityblock,0.0,label,class_1,gen_base_1,1.0,5
+UCI-iris,single,cityblock,0.0,label,class_1,gen_base_2,1.0,5
+UCI-iris,single,cityblock,0.0,label,class_2,base,1.0,5
+UCI-iris,single,cityblock,0.0,label,class_2,clusters,0.9850746268656716,5
+UCI-iris,single,cityblock,0.0,label,class_2,gen_base_1,1.0,5
+UCI-iris,single,cityblock,0.0,label,class_2,gen_base_2,1.0,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,High,base,1.0,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,High,clusters,0.9696969696969697,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,High,gen_base_1,1.0,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,High,gen_base_2,1.0,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,Low,base,1.0,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,Low,clusters,0.7164179104477612,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,Low,gen_base_1,1.0,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,Low,gen_base_2,1.0,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,MedHigh,base,1.0,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,MedHigh,clusters,0.9850746268656716,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,MedHigh,gen_base_1,1.0,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,MedHigh,gen_base_2,1.0,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,MedLow,base,1.0,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,MedLow,clusters,0.8173572459286745,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,MedLow,gen_base_1,1.0,5
+UCI-iris,single,cityblock,0.0,sepal length (cm)_quantiles,MedLow,gen_base_2,1.0,5
+UCI-iris,single,cityblock,0.02,label,class_0,base,1.0,5
+UCI-iris,single,cityblock,0.02,label,class_0,clusters,0.9705882352941176,5
+UCI-iris,single,cityblock,0.02,label,class_0,gen_base_1,1.0,5
+UCI-iris,single,cityblock,0.02,label,class_0,gen_base_2,1.0,5
+UCI-iris,single,cityblock,0.02,label,class_1,base,0.9230263157894737,5
+UCI-iris,single,cityblock,0.02,label,class_1,clusters,0.9850746268656716,5
+UCI-iris,single,cityblock,0.02,label,class_1,gen_base_1,0.8639622641509435,5
+UCI-iris,single,cityblock,0.02,label,class_1,gen_base_2,0.9555555555555556,5
+UCI-iris,single,cityblock,0.02,label,class_2,base,1.0,5
+UCI-iris,single,cityblock,0.02,label,class_2,clusters,0.9850746268656716,5
+UCI-iris,single,cityblock,0.02,label,class_2,gen_base_1,0.7538798920377867,5
+UCI-iris,single,cityblock,0.02,label,class_2,gen_base_2,0.8888339920948616,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,High,base,0.7845643939393939,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,High,clusters,0.803030303030303,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,High,gen_base_1,0.8423645320197044,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,High,gen_base_2,0.8005937654626423,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,Low,base,0.9655172413793104,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,Low,clusters,0.6917684305744007,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,Low,gen_base_1,0.895945945945946,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,Low,gen_base_2,0.9411764705882353,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,MedHigh,base,0.7567567567567568,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,MedHigh,clusters,0.9850746268656716,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,MedHigh,gen_base_1,0.8976934523809523,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,MedHigh,gen_base_2,0.8558441558441559,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,MedLow,base,0.7776061776061776,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,MedLow,clusters,0.8972602739726028,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,MedLow,gen_base_1,0.8410852713178294,5
+UCI-iris,single,cityblock,0.02,sepal length (cm)_quantiles,MedLow,gen_base_2,0.8148581837106428,5
+UCI-iris,single,euclidean,0.0,label,class_0,base,1.0,5
+UCI-iris,single,euclidean,0.0,label,class_0,clusters,0.9705882352941176,5
+UCI-iris,single,euclidean,0.0,label,class_0,gen_base_1,1.0,5
+UCI-iris,single,euclidean,0.0,label,class_0,gen_base_2,1.0,5
+UCI-iris,single,euclidean,0.0,label,class_1,base,1.0,5
+UCI-iris,single,euclidean,0.0,label,class_1,clusters,0.9323835368611488,5
+UCI-iris,single,euclidean,0.0,label,class_1,gen_base_1,1.0,5
+UCI-iris,single,euclidean,0.0,label,class_1,gen_base_2,1.0,5
+UCI-iris,single,euclidean,0.0,label,class_2,base,1.0,5
+UCI-iris,single,euclidean,0.0,label,class_2,clusters,0.9850746268656716,5
+UCI-iris,single,euclidean,0.0,label,class_2,gen_base_1,1.0,5
+UCI-iris,single,euclidean,0.0,label,class_2,gen_base_2,1.0,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,High,base,1.0,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,High,clusters,0.9696969696969697,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,High,gen_base_1,1.0,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,High,gen_base_2,1.0,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,Low,base,1.0,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,Low,clusters,0.7164179104477612,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,Low,gen_base_1,1.0,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,Low,gen_base_2,1.0,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,MedHigh,base,1.0,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,MedHigh,clusters,0.9850746268656716,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,MedHigh,gen_base_1,1.0,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,MedHigh,gen_base_2,1.0,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,MedLow,base,1.0,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,MedLow,clusters,0.8173572459286745,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,MedLow,gen_base_1,1.0,5
+UCI-iris,single,euclidean,0.0,sepal length (cm)_quantiles,MedLow,gen_base_2,1.0,5
+UCI-iris,single,euclidean,0.02,label,class_0,base,1.0,5
+UCI-iris,single,euclidean,0.02,label,class_0,clusters,0.9705882352941176,5
+UCI-iris,single,euclidean,0.02,label,class_0,gen_base_1,1.0,5
+UCI-iris,single,euclidean,0.02,label,class_0,gen_base_2,1.0,5
+UCI-iris,single,euclidean,0.02,label,class_1,base,0.9444444444444444,5
+UCI-iris,single,euclidean,0.02,label,class_1,clusters,0.9850746268656716,5
+UCI-iris,single,euclidean,0.02,label,class_1,gen_base_1,0.9148550724637681,5
+UCI-iris,single,euclidean,0.02,label,class_1,gen_base_2,0.91875,5
+UCI-iris,single,euclidean,0.02,label,class_2,base,0.9714285714285714,5
+UCI-iris,single,euclidean,0.02,label,class_2,clusters,0.9850746268656716,5
+UCI-iris,single,euclidean,0.02,label,class_2,gen_base_1,0.8090909090909091,5
+UCI-iris,single,euclidean,0.02,label,class_2,gen_base_2,0.8308716707021792,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,High,base,0.8094758064516129,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,High,clusters,0.803030303030303,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,High,gen_base_1,0.8229166666666667,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,High,gen_base_2,0.8674999999999999,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,Low,base,0.9655172413793104,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,Low,clusters,0.6917684305744007,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,Low,gen_base_1,0.8888888888888888,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,Low,gen_base_2,0.9068278805120911,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,MedHigh,base,0.8709677419354839,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,MedHigh,clusters,0.9850746268656716,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,MedHigh,gen_base_1,0.896551724137931,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,MedHigh,gen_base_2,0.9649122807017544,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,MedLow,base,0.838235294117647,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,MedLow,clusters,0.8972602739726028,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,MedLow,gen_base_1,0.8245102611940298,5
+UCI-iris,single,euclidean,0.02,sepal length (cm)_quantiles,MedLow,gen_base_2,0.9416027280477408,5
+UCI-iris,ward,euclidean,0.0,label,class_0,base,1.0,5
+UCI-iris,ward,euclidean,0.0,label,class_0,clusters,0.9705882352941176,5
+UCI-iris,ward,euclidean,0.0,label,class_0,gen_base_1,1.0,5
+UCI-iris,ward,euclidean,0.0,label,class_0,gen_base_2,1.0,5
+UCI-iris,ward,euclidean,0.0,label,class_1,base,1.0,5
+UCI-iris,ward,euclidean,0.0,label,class_1,clusters,0.9323835368611488,5
+UCI-iris,ward,euclidean,0.0,label,class_1,gen_base_1,1.0,5
+UCI-iris,ward,euclidean,0.0,label,class_1,gen_base_2,1.0,5
+UCI-iris,ward,euclidean,0.0,label,class_2,base,1.0,5
+UCI-iris,ward,euclidean,0.0,label,class_2,clusters,0.9850746268656716,5
+UCI-iris,ward,euclidean,0.0,label,class_2,gen_base_1,1.0,5
+UCI-iris,ward,euclidean,0.0,label,class_2,gen_base_2,1.0,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,High,base,1.0,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,High,clusters,0.9696969696969697,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,High,gen_base_1,1.0,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,High,gen_base_2,1.0,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,Low,base,1.0,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,Low,clusters,0.7164179104477612,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,Low,gen_base_1,1.0,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,Low,gen_base_2,1.0,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,MedHigh,base,1.0,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,MedHigh,clusters,0.9850746268656716,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,MedHigh,gen_base_1,1.0,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,MedHigh,gen_base_2,1.0,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,MedLow,base,1.0,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,MedLow,clusters,0.8173572459286745,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,MedLow,gen_base_1,1.0,5
+UCI-iris,ward,euclidean,0.0,sepal length (cm)_quantiles,MedLow,gen_base_2,1.0,5
+UCI-iris,ward,euclidean,0.02,label,class_0,base,1.0,5
+UCI-iris,ward,euclidean,0.02,label,class_0,clusters,0.9705882352941176,5
+UCI-iris,ward,euclidean,0.02,label,class_0,gen_base_1,1.0,5
+UCI-iris,ward,euclidean,0.02,label,class_0,gen_base_2,1.0,5
+UCI-iris,ward,euclidean,0.02,label,class_1,base,1.0,5
+UCI-iris,ward,euclidean,0.02,label,class_1,clusters,0.9850746268656716,5
+UCI-iris,ward,euclidean,0.02,label,class_1,gen_base_1,0.9148936170212766,5
+UCI-iris,ward,euclidean,0.02,label,class_1,gen_base_2,0.9387755102040817,5
+UCI-iris,ward,euclidean,0.02,label,class_2,base,0.9743589743589743,5
+UCI-iris,ward,euclidean,0.02,label,class_2,clusters,0.9850746268656716,5
+UCI-iris,ward,euclidean,0.02,label,class_2,gen_base_1,0.8230434782608695,5
+UCI-iris,ward,euclidean,0.02,label,class_2,gen_base_2,0.9127073906485671,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,High,base,0.8225806451612903,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,High,clusters,0.803030303030303,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,High,gen_base_1,0.7116883116883117,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,High,gen_base_2,0.8484413453650533,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,Low,base,1.0,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,Low,clusters,0.6917684305744007,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,Low,gen_base_1,0.9230769230769231,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,Low,gen_base_2,1.0,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,MedHigh,base,0.8117647058823529,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,MedHigh,clusters,0.9850746268656716,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,MedHigh,gen_base_1,0.8808080808080807,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,MedHigh,gen_base_2,0.8793103448275862,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,MedLow,base,0.795045045045045,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,MedLow,clusters,0.8972602739726028,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,MedLow,gen_base_1,0.8345771144278606,5
+UCI-iris,ward,euclidean,0.02,sepal length (cm)_quantiles,MedLow,gen_base_2,0.8712973593570608,5
