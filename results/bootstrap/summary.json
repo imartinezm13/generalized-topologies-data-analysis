@@ -1,0 +1,78 @@
+{
+  "config": {
+    "bootstraps": 10,
+    "confidence": 0.95,
+    "linkage_method": "single",
+    "distance_metric": "euclidean",
+    "target_r2": 0.99,
+    "random_seed": 42
+  },
+  "baseline": {
+    "base_max_original": 5,
+    "gen_base_1_vk": 0.18039645982233043,
+    "gen_base_1_pair_original": [
+      [
+        6,
+        35
+      ],
+      [
+        13,
+        14,
+        46,
+        58
+      ]
+    ],
+    "gen_base_2_vk": 0.15432709648844595,
+    "gen_base_2_pair_original": [
+      [
+        15,
+        34,
+        54
+      ],
+      [
+        23,
+        29,
+        42,
+        61,
+        69
+      ]
+    ],
+    "silhouette": 0.5351423220490651
+  },
+  "probabilities": {
+    "base_max_match": {
+      "p": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.2775327998628892
+    },
+    "gen_base_1_pair_match": {
+      "p": 0.6,
+      "ci_lower": 0.3126737697336583,
+      "ci_upper": 0.8318196702937638
+    },
+    "gen_base_2_pair_match": {
+      "p": 1.0,
+      "ci_lower": 0.7224672001371106,
+      "ci_upper": 0.9999999999999999
+    }
+  },
+  "similarities": {
+    "jaccard_threshold": 0.5,
+    "gen_base_1_mean_jaccard": 0.5143672839506173,
+    "gen_base_2_mean_jaccard": 0.6151388888888889
+  },
+  "vk_intervals": {
+    "gen_base_1_vk": [
+      0.06173886023550567,
+      0.8507310365191799
+    ],
+    "gen_base_2_vk": [
+      0.13833046676427854,
+      0.8746570700269429
+    ]
+  },
+  "silhouette_interval": [
+    0.6786294270849516,
+    0.7968214304931628
+  ]
+}
