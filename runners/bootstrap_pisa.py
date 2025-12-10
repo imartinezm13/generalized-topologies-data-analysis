@@ -394,10 +394,37 @@ def bootstrap_pisa(bootstraps: int,
     qualitative = ['Country', 'Type of Economy', 'Population Density', 'Type of Government', 'Continent']
     df_numeric = df_original.drop(columns=qualitative)
 
-    df_scaled = preprocess_data(df_numeric)
-    baseline_indices = np.arange(len(df_numeric))
-    # Baseline selections on the full dataset
-    baseline = run_single(df_numeric, df_scaled, baseline_indices, linkage_method, distance_metric, target_r2)
+    output_root.mkdir(parents=True, exist_ok=True)
+    replicates_path = output_root / "replicates.csv"
+    baseline_path = output_root / "baseline.json"
+
+    # If a baseline already exists (resume), load it; otherwise compute and persist it.
+    if baseline_path.exists():
+        baseline_payload = json.loads(baseline_path.read_text())
+        baseline = baseline_payload["baseline"]
+        baseline_config = baseline_payload.get("config", {})
+    else:
+        df_scaled = preprocess_data(df_numeric)
+        baseline_indices = np.arange(len(df_numeric))
+        baseline_run = run_single(df_numeric, df_scaled, baseline_indices, linkage_method, distance_metric, target_r2)
+        baseline = {
+            "base_max_original": baseline_run["base_max_original"],
+            "gen_base_1_vk": baseline_run["gen_base_1_vk"],
+            "gen_base_1_pair_original": baseline_run["gen_base_1_pair_original"],
+            "gen_base_1_merged_set": baseline_run["gen_base_1_merged_set"],
+            "gen_base_2_vk": baseline_run["gen_base_2_vk"],
+            "gen_base_2_pair_original": baseline_run["gen_base_2_pair_original"],
+            "gen_base_2_merged_set": baseline_run["gen_base_2_merged_set"],
+            "silhouette": baseline_run["silhouette"],
+        }
+        baseline_config = {
+            "linkage_method": linkage_method,
+            "distance_metric": distance_metric,
+            "target_r2": target_r2,
+            "random_seed": random_seed,
+        }
+        baseline_payload = {"baseline": baseline, "config": baseline_config}
+        baseline_path.write_text(json.dumps(baseline_payload, indent=2))
 
     base_matches = 0
     gen1_pair_matches = 0
@@ -411,9 +438,37 @@ def bootstrap_pisa(bootstraps: int,
     # Treat a bootstrap as a "match" if the merged set overlaps the baseline above this Jaccard level
     jaccard_threshold = 0.5
 
-    for b in range(bootstraps):
-        if b == 0 or (b + 1) % max(1, bootstraps // 10) == 0 or b == bootstraps - 1:
-            print(f"[bootstrap] iteration {b+1}/{bootstraps}")
+    # If partial results exist, warm-start counts from disk.
+    start_iter = 0
+    if replicates_path.exists():
+        existing = pd.read_csv(replicates_path)
+        start_iter = len(existing)
+        if start_iter > 0:
+            print(f"[bootstrap] found {start_iter} existing replicates; continuing from there.")
+            base_matches = int((existing["base_max_original"] == baseline["base_max_original"]).sum())
+            j1_existing = existing["gen_base_1_jaccard_vs_baseline"].dropna().tolist()
+            j2_existing = existing["gen_base_2_jaccard_vs_baseline"].dropna().tolist()
+            gen1_jaccards.extend(j1_existing)
+            gen2_jaccards.extend(j2_existing)
+            gen1_pair_matches = int((existing["gen_base_1_jaccard_vs_baseline"] > jaccard_threshold).sum())
+            gen2_pair_matches = int((existing["gen_base_2_jaccard_vs_baseline"] > jaccard_threshold).sum())
+            vk1_values.extend(existing["gen_base_1_vk"].dropna().tolist())
+            vk2_values.extend(existing["gen_base_2_vk"].dropna().tolist())
+            silhouette_values.extend(existing["silhouette"].dropna().tolist())
+
+    # If the user asks for fewer iterations than already exist, reuse them.
+    total_reps = max(bootstraps, start_iter)
+
+    def append_record(record: Dict):
+        """Persist a single replicate row immediately."""
+        file_exists = replicates_path.exists()
+        pd.DataFrame([record]).to_csv(
+            replicates_path, mode="a", header=not file_exists, index=False
+        )
+
+    for b in range(start_iter, total_reps):
+        if b == start_iter or (b + 1) % max(1, total_reps // 10) == 0 or b == total_reps - 1:
+            print(f"[bootstrap] iteration {b+1}/{total_reps}")
         # Keep the original row ids so we can map selections back after resampling.
         sample_idx = rng.integers(0, len(df_numeric), size=len(df_numeric))
         df_boot = df_numeric.iloc[sample_idx].reset_index(drop=True)
@@ -443,7 +498,7 @@ def bootstrap_pisa(bootstraps: int,
         vk2_values.append(run["gen_base_2_vk"])
         silhouette_values.append(run["silhouette"])
 
-        records.append({
+        record = {
             "bootstrap": b,
             "base_max_original": run["base_max_original"],
             "gen_base_1_vk": run["gen_base_1_vk"],
@@ -455,12 +510,14 @@ def bootstrap_pisa(bootstraps: int,
             "silhouette": run["silhouette"],
             "gen_base_1_jaccard_vs_baseline": j1,
             "gen_base_2_jaccard_vs_baseline": j2,
-        })
+        }
+        records.append(record)
+        append_record(record)
 
-
-    base_p, base_lo, base_hi = wilson_interval(base_matches, bootstraps, confidence)
-    gen1_p, gen1_lo, gen1_hi = wilson_interval(gen1_pair_matches, bootstraps, confidence)
-    gen2_p, gen2_lo, gen2_hi = wilson_interval(gen2_pair_matches, bootstraps, confidence)
+    # All statistics use the total number of available replicates (existing + new)
+    base_p, base_lo, base_hi = wilson_interval(base_matches, total_reps, confidence)
+    gen1_p, gen1_lo, gen1_hi = wilson_interval(gen1_pair_matches, total_reps, confidence)
+    gen2_p, gen2_lo, gen2_hi = wilson_interval(gen2_pair_matches, total_reps, confidence)
 
     vk1_ci = percentile_interval(vk1_values, confidence)
     vk2_ci = percentile_interval(vk2_values, confidence)
@@ -468,12 +525,12 @@ def bootstrap_pisa(bootstraps: int,
 
     summary = {
         "config": {
-            "bootstraps": bootstraps,
+            "bootstraps": total_reps,
             "confidence": confidence,
-            "linkage_method": linkage_method,
-            "distance_metric": distance_metric,
-            "target_r2": target_r2,
-            "random_seed": random_seed,
+            "linkage_method": baseline_config.get("linkage_method", linkage_method),
+            "distance_metric": baseline_config.get("distance_metric", distance_metric),
+            "target_r2": baseline_config.get("target_r2", target_r2),
+            "random_seed": baseline_config.get("random_seed", random_seed),
         },
         "baseline": {
             "base_max_original": baseline["base_max_original"],
@@ -507,6 +564,73 @@ def bootstrap_pisa(bootstraps: int,
     return summary
 
 
+def regenerate_summary(output_root: Path, confidence: float = 0.95, jaccard_threshold: float = 0.5):
+    """
+    Rebuild summary.json from an existing baseline.json + replicates.csv.
+    Useful after an interrupted run that already wrote partial results.
+    """
+    baseline_path = output_root / "baseline.json"
+    replicates_path = output_root / "replicates.csv"
+
+    if not baseline_path.exists() or not replicates_path.exists():
+        raise FileNotFoundError("baseline.json or replicates.csv not found; run bootstrap first.")
+
+    baseline_payload = json.loads(baseline_path.read_text())
+    baseline = baseline_payload["baseline"]
+    baseline_config = baseline_payload.get("config", {})
+    df = pd.read_csv(replicates_path)
+    total_reps = len(df)
+    if total_reps == 0:
+        raise ValueError("replicates.csv is empty; nothing to summarize.")
+
+    base_matches = int((df["base_max_original"] == baseline["base_max_original"]).sum())
+    gen1_jaccards = df["gen_base_1_jaccard_vs_baseline"].dropna().tolist()
+    gen2_jaccards = df["gen_base_2_jaccard_vs_baseline"].dropna().tolist()
+    gen1_pair_matches = int((df["gen_base_1_jaccard_vs_baseline"] > jaccard_threshold).sum())
+    gen2_pair_matches = int((df["gen_base_2_jaccard_vs_baseline"] > jaccard_threshold).sum())
+    vk1_values = df["gen_base_1_vk"].dropna().tolist()
+    vk2_values = df["gen_base_2_vk"].dropna().tolist()
+    silhouette_values = df["silhouette"].dropna().tolist()
+
+    base_p, base_lo, base_hi = wilson_interval(base_matches, total_reps, confidence)
+    gen1_p, gen1_lo, gen1_hi = wilson_interval(gen1_pair_matches, total_reps, confidence)
+    gen2_p, gen2_lo, gen2_hi = wilson_interval(gen2_pair_matches, total_reps, confidence)
+
+    vk1_ci = percentile_interval(vk1_values, confidence)
+    vk2_ci = percentile_interval(vk2_values, confidence)
+    silhouette_ci = percentile_interval([v for v in silhouette_values if v is not None], confidence)
+
+    summary = {
+        "config": {
+            "bootstraps": total_reps,
+            "confidence": confidence,
+            "linkage_method": baseline_config.get("linkage_method"),
+            "distance_metric": baseline_config.get("distance_metric"),
+            "target_r2": baseline_config.get("target_r2"),
+            "random_seed": baseline_config.get("random_seed"),
+        },
+        "baseline": baseline,
+        "probabilities": {
+            "base_max_match": {"p": base_p, "ci_lower": base_lo, "ci_upper": base_hi},
+            "gen_base_1_pair_match": {"p": gen1_p, "ci_lower": gen1_lo, "ci_upper": gen1_hi},
+            "gen_base_2_pair_match": {"p": gen2_p, "ci_lower": gen2_lo, "ci_upper": gen2_hi},
+        },
+        "similarities": {
+            "jaccard_threshold": jaccard_threshold,
+            "gen_base_1_mean_jaccard": float(np.mean(gen1_jaccards)) if gen1_jaccards else None,
+            "gen_base_2_mean_jaccard": float(np.mean(gen2_jaccards)) if gen2_jaccards else None,
+        },
+        "vk_intervals": {
+            "gen_base_1_vk": vk1_ci,
+            "gen_base_2_vk": vk2_ci,
+        },
+        "silhouette_interval": silhouette_ci,
+    }
+
+    (output_root / "summary.json").write_text(json.dumps(summary, indent=2))
+    return summary
+
+
 def main():
     parser = argparse.ArgumentParser(description="Bootstrap robustness for PISA bases.")
     parser.add_argument("--bootstraps", type=int, default=100, help="Number of bootstrap replicates.")
@@ -516,17 +640,23 @@ def main():
     parser.add_argument("--target-r2", type=float, default=0.99, help="Target R^2 for regression thresholding.")
     parser.add_argument("--seed", type=int, default=42, help="Random seed for bootstrap replicates.")
     parser.add_argument("--out", default="results/bootstrap", help="Output directory for summary and per-replicate CSV.")
+    parser.add_argument("--regen-summary", action="store_true", help="Regenerate summary.json from existing results and exit.")
 
     args = parser.parse_args()
-    summary = bootstrap_pisa(
-        bootstraps=args.bootstraps,
-        confidence=args.confidence,
-        linkage_method=args.linkage,
-        distance_metric=args.metric,
-        target_r2=args.target_r2,
-        random_seed=args.seed,
-        output_root=Path(args.out),
-    )
+    output_root = Path(args.out)
+
+    if args.regen_summary:
+        summary = regenerate_summary(output_root, confidence=args.confidence)
+    else:
+        summary = bootstrap_pisa(
+            bootstraps=args.bootstraps,
+            confidence=args.confidence,
+            linkage_method=args.linkage,
+            distance_metric=args.metric,
+            target_r2=args.target_r2,
+            random_seed=args.seed,
+            output_root=output_root,
+        )
 
     print(json.dumps(summary, indent=2))
 
