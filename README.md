@@ -7,6 +7,7 @@ This repository contains code and resources for analyzing and constructing gener
 - `data/`  
   - `PISA_test_database.xlsm` – main PISA country dataset.
 - `results/`  
+  - `bootstrap/` – PISA bootstrap outputs (baseline, per-replicate CSV, summary JSON).  
   - `PISA/` – PISA outputs (economy, government, density, continent) and sensitivity runs.  
   - `Gapminder/` – Gapminder outputs (continent, income, development) and sensitivity runs.  
   - `Synthetic/` – synthetic experiments (blobs/moons/circles) and sensitivity runs.  
@@ -20,6 +21,7 @@ This repository contains code and resources for analyzing and constructing gener
   - `datasets.py` – loaders for PISA, Gapminder (via plotly), UCI, and synthetic datasets.  
   - `groups.py` – helpers to build categorical and quantile-based seed groups.
 - `runners/` – dataset-specific and analysis entry points  
+  - `bootstrap_pisa.py` – bootstrap stability for PISA bases (baseline + replicates + summary outputs).  
   - `gapminder_runner.py` – Gapminder pipeline.  
   - `synthetic_runner.py` – synthetic blobs/moons/circles pipeline.  
   - `uci_runner.py` – UCI (iris, wine, breast_cancer) pipeline.  
@@ -94,11 +96,25 @@ Additional datasets write under their own subfolders:
 - `results/Synthetic/<Kind>/<family>/*.xlsx`  
 - `results/UCI/<name>/<family>/*.xlsx`
 
+Bootstrap robustness for PISA writes to `results/bootstrap/`, including `baseline.json` (deterministic run + config), `replicates.csv` (per-bootstrap selections), and `summary.json` (probabilities, confidence intervals, and Jaccard similarities).
+
 This mirrors the manual analysis workflow: build bases, pick a seed group, compute closure/interior, and inspect Excel outputs.
 
 ## Additional Datasets and Runners
 
 All dataset runners follow the same pattern: build bases, define seed families, compute closure/interior, and export Excel for manual inspection.
+
+### Bootstrap PISA — `runners/bootstrap_pisa.py`
+
+- Bootstraps the PISA pipeline to quantify how often the S_n winner and generalized base merges recur across resampled datasets.  
+- Persists a deterministic `baseline.json`, appends per-replicate selections and Jaccard overlaps to `replicates.csv`, and aggregates Wilson/percentile intervals into `summary.json` (match probabilities for `base`, `gen_base_1`, `gen_base_2`, mean Jaccard vs. baseline, v_k and silhouette intervals).  
+- Resumes from existing outputs; use `--regen-summary` to rebuild `summary.json` from on-disk results after an interrupted run.
+
+Run (default single linkage + Euclidean, 95% intervals, 1k replicates):
+
+```bash
+python runners/bootstrap_pisa.py --bootstraps 1000 --confidence 0.95 --out results/bootstrap
+```
 
 ### Gapminder — `runners/gapminder_runner.py`
 
