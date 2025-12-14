@@ -9,6 +9,7 @@ from typing import Dict, List, Optional, Sequence, Tuple
 import numpy as np
 import pandas as pd
 from scipy.cluster.hierarchy import linkage
+from scipy.cluster.hierarchy import to_tree
 from scipy.spatial.distance import pdist, squareform
 from scipy.stats import norm
 
@@ -70,6 +71,67 @@ def select_pair(positions: np.ndarray, distances: np.ndarray) -> Optional[Tuple[
             best_dist = dist
             best_pair = (int(i), int(j))
     return best_pair
+
+
+def sn_cluster_to_original(
+    base: List[Sequence[int]],
+    max_sn_leaf: Optional[int],
+    sample_indices: Sequence[int],
+) -> Optional[List[int]]:
+    """Given a topological base and the leaf with max S_n, return the original IDs in its block."""
+    if max_sn_leaf is None or base is None:
+        return None
+
+    leaf = int(max_sn_leaf)
+    n = len(sample_indices)
+
+    # 1) Find the block in the base that contains the leaf
+    cluster_local = None
+    for subset in base:
+        subset_int = [int(x) for x in subset]
+        if leaf in subset_int:
+            cluster_local = subset_int
+            break
+
+    if cluster_local is None:
+        return None
+
+    # 2) Map to original IDs (taking care with the same index trick used in map_*_to_original)
+    original_ids = set()
+    for idx in cluster_local:
+        val = int(idx)
+        if val >= n and val - 1 < n:
+            val -= 1
+        if 0 <= val < n:
+            original_ids.add(int(sample_indices[val]))
+
+    if not original_ids:
+        return None
+
+    # Return sorted list so it can be serialized in JSON/CSV
+    return sorted(original_ids)
+
+def sn_node_leaves_from_linkage(Z, node_id: Optional[int]) -> Optional[List[int]]:
+    """
+    Given a SciPy linkage matrix Z and a node_id (leaf < n, internal >= n),
+    return the list of leaf indices (0..n-1) under that node.
+    """
+    if node_id is None:
+        return None
+
+    node_id = int(node_id)
+    root, nodes = to_tree(Z, rd=True)
+
+    # nodes list is indexed by node.id. Typical IDs: 0..n-1 leaves, n..2n-2 internals.
+    if node_id < 0 or node_id >= len(nodes):
+        # If you suspect 1-based indexing, try a fallback:
+        if 0 <= node_id - 1 < len(nodes):
+            node_id = node_id - 1
+        else:
+            return None
+
+    node = nodes[node_id]
+    return node.pre_order()  # returns leaf ids
 
 
 def map_leaf_to_original(leaf_idx: Optional[int], sample_indices: Sequence[int]) -> Optional[int]:
@@ -153,28 +215,32 @@ def jaccard_similarity(a: Optional[Sequence[int]], b: Optional[Sequence[int]]) -
     return len(A & B) / union
 
 
-def compute_base_with_metadata(df_scaled: np.ndarray, linkage_method: str, distance_metric: str) -> Tuple[List[List[int]], Optional[int]]:
-    """Build base and return the leaf achieving max S_n."""
+def compute_base_with_metadata(
+    df_scaled: np.ndarray, linkage_method: str, distance_metric: str
+) -> Tuple[List[List[int]], Optional[int], np.ndarray]:
+    """Build base and return the leaf achieving max S_n, plus the linkage matrix Z."""
     if linkage_method == "ward":
-        dendrogram = linkage(df_scaled, method="ward")
+        Z = linkage(df_scaled, method="ward")
     else:
         condensed = pdist(df_scaled, metric=distance_metric)
-        dendrogram = linkage(condensed, method=linkage_method)
+        Z = linkage(condensed, method=linkage_method)
 
-    result_tree = convertir_a_Tree(dendrogram, leaf_names=range(len(df_scaled)))
+    result_tree = convertir_a_Tree(Z, leaf_names=range(len(df_scaled)))
     asignar_nombres(result_tree)
     all_subtrees = obtener_subarboles(result_tree)
     n_subtrees = obtener_n_subarboles(all_subtrees, len(df_scaled))
     maximals = obtener_maximales(n_subtrees)
     sn = calcular_sn(maximals)
     base = base_topologica(sn, maximals)
-    max_sn_leaf = None
+
+    max_sn_node = None
     if sn:
         try:
-            max_sn_leaf = int(max(sn, key=lambda x: x[1])[0])
+            max_sn_node = int(max(sn, key=lambda x: x[1])[0])  # node/subtree id
         except Exception:
-            max_sn_leaf = None
-    return base, max_sn_leaf
+            max_sn_node = None
+
+    return base, max_sn_node, Z
 
 
 def silhouette_for_clusters(df: pd.DataFrame, clusters: List[Sequence[int]]) -> Optional[float]:
@@ -342,8 +408,11 @@ def run_single(df_numeric: pd.DataFrame,
                target_r2: float):
     """Execute one run (original or bootstrap) and capture selections."""
     # 1) Base maximal + S_n winner
-    base, max_sn_leaf = compute_base_with_metadata(df_scaled, linkage_method, distance_metric)
-    max_sn_original = map_leaf_to_original(max_sn_leaf, sample_indices)
+    base, max_sn_node, Z = compute_base_with_metadata(df_scaled, linkage_method, distance_metric)
+    base_max_original = map_leaf_to_original(max_sn_node, sample_indices)
+
+    sn_cluster_original = sn_cluster_to_original(base, max_sn_node, sample_indices)
+    sn_cluster_size = len(sn_cluster_original) if sn_cluster_original is not None else None
 
     # 2) Gen Base 1 (column-min representatives)
     gen_base_1, vk1, min_pair, base_int_1, positions_1 = build_gen_base_1_with_meta(
@@ -363,8 +432,10 @@ def run_single(df_numeric: pd.DataFrame,
     silhouette_score = silhouette_for_clusters(df_numeric, base) if base else None
 
     return {
-        "base_max_leaf": max_sn_leaf,
-        "base_max_original": max_sn_original,
+        "base_max_node": max_sn_node,
+        "base_max_original": base_max_original,
+        "sn_cluster_original": sn_cluster_original,
+        "sn_cluster_size": sn_cluster_size,
         "gen_base_1_vk": vk1,
         "gen_base_1_pair": min_pair,
         "gen_base_1_pair_original": min_pair_original,
@@ -393,6 +464,7 @@ def bootstrap_pisa(bootstraps: int,
     df_original = load_data()
     qualitative = ['Country', 'Type of Economy', 'Population Density', 'Type of Government', 'Continent']
     df_numeric = df_original.drop(columns=qualitative)
+    N_total = len(df_numeric)
 
     output_root.mkdir(parents=True, exist_ok=True)
     replicates_path = output_root / "replicates.csv"
@@ -409,6 +481,8 @@ def bootstrap_pisa(bootstraps: int,
         baseline_run = run_single(df_numeric, df_scaled, baseline_indices, linkage_method, distance_metric, target_r2)
         baseline = {
             "base_max_original": baseline_run["base_max_original"],
+            "sn_cluster_original": baseline_run["sn_cluster_original"],
+            "sn_cluster_size": baseline_run["sn_cluster_size"],
             "gen_base_1_vk": baseline_run["gen_base_1_vk"],
             "gen_base_1_pair_original": baseline_run["gen_base_1_pair_original"],
             "gen_base_1_merged_set": baseline_run["gen_base_1_merged_set"],
@@ -471,6 +545,9 @@ def bootstrap_pisa(bootstraps: int,
             print(f"[bootstrap] iteration {b+1}/{total_reps}")
         # Keep the original row ids so we can map selections back after resampling.
         sample_idx = rng.integers(0, len(df_numeric), size=len(df_numeric))
+        distinct_countries = int(len(np.unique(sample_idx)))
+        missing_countries = int(N_total - distinct_countries)
+
         df_boot = df_numeric.iloc[sample_idx].reset_index(drop=True)
         df_scaled_boot = preprocess_data(df_boot)
 
@@ -501,6 +578,9 @@ def bootstrap_pisa(bootstraps: int,
         record = {
             "bootstrap": b,
             "base_max_original": run["base_max_original"],
+            "sn_cluster_size": run["sn_cluster_size"],
+            "distinct_countries": distinct_countries,
+            "missing_countries": missing_countries,
             "gen_base_1_vk": run["gen_base_1_vk"],
             "gen_base_1_pair_original": run["gen_base_1_pair_original"],
             "gen_base_1_merged_set": run["gen_base_1_merged_set"],

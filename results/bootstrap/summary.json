@@ -1,6 +1,6 @@
 {
   "config": {
-    "bootstraps": 10,
+    "bootstraps": 1000,
     "confidence": 0.95,
     "linkage_method": "single",
     "distance_metric": "euclidean",
@@ -9,7 +9,7 @@
   },
   "baseline": {
     "base_max_original": 5,
-    "gen_base_1_vk": 0.18039645982233043,
+    "gen_base_1_vk": 0.18039645389292766,
     "gen_base_1_pair_original": [
       [
         6,
@@ -22,7 +22,7 @@
         58
       ]
     ],
-    "gen_base_2_vk": 0.15432709648844595,
+    "gen_base_2_vk": 0.15432709664537755,
     "gen_base_2_pair_original": [
       [
         15,
@@ -41,38 +41,38 @@
   },
   "probabilities": {
     "base_max_match": {
-      "p": 0.0,
-      "ci_lower": 0.0,
-      "ci_upper": 0.2775327998628892
+      "p": 0.008,
+      "ci_lower": 0.004059195818806103,
+      "ci_upper": 0.01570633453098014
     },
     "gen_base_1_pair_match": {
-      "p": 0.6,
-      "ci_lower": 0.3126737697336583,
-      "ci_upper": 0.8318196702937638
+      "p": 0.847,
+      "ci_lower": 0.823363445235336,
+      "ci_upper": 0.8679807843756887
     },
     "gen_base_2_pair_match": {
-      "p": 1.0,
-      "ci_lower": 0.7224672001371106,
-      "ci_upper": 0.9999999999999999
+      "p": 0.921,
+      "ci_lower": 0.9026250851159918,
+      "ci_upper": 0.9361527842391709
     }
   },
   "similarities": {
     "jaccard_threshold": 0.5,
-    "gen_base_1_mean_jaccard": 0.5143672839506173,
-    "gen_base_2_mean_jaccard": 0.6151388888888889
+    "gen_base_1_mean_jaccard": 0.5732089506172839,
+    "gen_base_2_mean_jaccard": 0.5961172839506174
   },
   "vk_intervals": {
     "gen_base_1_vk": [
-      0.06173886023550567,
-      0.8507310365191799
+      0.03512844906131694,
+      0.8729734038371115
     ],
     "gen_base_2_vk": [
-      0.13833046676427854,
-      0.8746570700269429
+      0.09596063678410696,
+      0.8941752538155109
     ]
   },
   "silhouette_interval": [
-    0.6786294270849516,
-    0.7968214304931628
+    0.6406135408962808,
+    0.8295794735656817
   ]
 }
